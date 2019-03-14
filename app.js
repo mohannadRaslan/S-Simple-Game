@@ -1,4 +1,4 @@
-var scores, roundScore, activePlayer, gamePlaying, previousRoll, winningScore;
+var scores, roundScore, activePlayer, gamePlaying, winningScore;
 
 initializingGame();
 
@@ -7,7 +7,6 @@ function initializingGame() {
     roundScore = 0;
     activePlayer = 0; // first player
     gamePlaying = true;
-    previousRoll = 0;
     winningScore = 100;
     
     document.querySelector('.first').style.display = 'none';
@@ -32,7 +31,6 @@ function initializingGame() {
 
 function changePlayer(){
     roundScore = 0;
-    previousRoll = 0;
     document.querySelector('#current-' + activePlayer).textContent = roundScore;
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
     document.querySelector('.player-0-panel').classList.toggle('active');
@@ -55,15 +53,20 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         var diceImage = document.querySelector('.second');
         diceImage.style.display = 'block';
         diceImage.src = 'dice-' + secondDice + '.png';
-
-        if(firstDice === 1 || secondDice === 1 || (previousRoll === firstDice && previousRoll === 6)){
+        
+        if ((firstDice === 6 && secondDice === 6)){
+            scores[activePlayer] = 0;
+            document.getElementById('score-'+activePlayer).textContent = scores[activePlayer];
             changePlayer();
-        }else{
-            totalDices = firstDice + secondDice;
-            roundScore += totalDices;
-            previousRoll = totalDices;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } 
+        }else {
+            if(firstDice === 1 || secondDice === 1){
+                changePlayer(); 
+            }else{
+                totalDices = firstDice + secondDice;
+                roundScore += totalDices;
+                document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            }
+        }
     }else{
         alert('The game has been finished!\nPlease start a new game');
     }
