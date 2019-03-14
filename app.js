@@ -1,4 +1,4 @@
-var scores, roundScore, activePlayer, gamePlaying, previousRoll;
+var scores, roundScore, activePlayer, gamePlaying, previousRoll, winningScore;
 
 initializingGame();
 
@@ -8,9 +8,12 @@ function initializingGame() {
     activePlayer = 0; // first player
     gamePlaying = true;
     previousRoll = 0;
+    winningScore = 100;
     
     document.querySelector('.dice').style.display = 'none';
-
+    document.querySelector('.final-score').value = "";
+    
+    document.querySelector('.final-score').disabled = false;
 
     for(var i=0;i<2;i++){
         var score = 'score-'+i;
@@ -63,8 +66,10 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
     if(gamePlaying){
         scores[activePlayer] += roundScore;
         document.getElementById('score-'+activePlayer).textContent = scores[activePlayer];
-
-        if(scores[activePlayer] > 100) {
+        
+        document.querySelector('.final-score').disabled = true;
+        
+        if(scores[activePlayer] > winningScore) {
             document.querySelector('#name-'+activePlayer).textContent = 'Winner';
             document.querySelector('.dice').style.display = 'active';
             document.querySelector('.player-'+activePlayer+'-panel').classList.add('winner');
@@ -80,5 +85,18 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
     
     
 });
+
+document.querySelector('.final-score').addEventListener('change', function(){
+    var input = document.querySelector('.final-score').value;
+    var positiveIntegers = /^\d*$/;
+        
+    if(input && positiveIntegers.test(input)){
+        winningScore = input;
+        console.log(input);
+     }else{
+         alert('Please try again to add FINAL SCORE. If you didn\'n add a Final Score, it will turned to 100!');
+     }
+})
+
 
 document.querySelector('.btn-new').addEventListener('click', initializingGame);
